@@ -48,15 +48,9 @@ void* threadfunc_2(void* p)
   	return NULL;
 }
 
-void semaphore_shuffle_time(){
-	
-}
-
-int main(int argc, char** argv)
-{
-	printf("Running for %d iterations\n", NUM_ITERATIONS);
-	
+long long unsigned semaphore_shuffle_time(){
 	sem_init(&binary_semaphore, 0, 1);
+	
 	pthread_t childt_1, childt_2;
   	pthread_create(&childt_1, NULL, threadfunc_1, NULL);
   	pthread_create(&childt_2, NULL, threadfunc_2, NULL);
@@ -68,11 +62,9 @@ int main(int argc, char** argv)
 
  	if(flag==1){
  		// threadfun_1 executed first
- 		printf("threadfun_1 executed first\n");
  		elapsed = t3-t2;
  	}else if(flag==2){
  		// threadfun_2 executed first
- 		printf("threadfun_2 executed first\n");
  		elapsed = t1-t4;
  	}else {
  		printf("flag value remained -1\n");
@@ -81,10 +73,20 @@ int main(int argc, char** argv)
   	
   	sem_destroy(&binary_semaphore);
 	
-	// printf("t1 %llu ns\n", t1);
-	// printf("t2 %llu ns\n", t2);
-	// printf("t3 %llu ns\n", t3);
-	// printf("t4 %llu ns\n", t4);
-  	printf("Semaphore Shuffling time %llu ns\n", elapsed);
+  	return elapsed;
+}
+
+int main(int argc, char** argv)
+{
+	printf("Running for %d iterations\n", NUM_ITERATIONS);
+	
+	long long unsigned total_elapsed=0;
+	for(int i=0;i<NUM_ITERATIONS;i++){
+		total_elapsed += semaphore_shuffle_time();
+	}
+
+	double avg_semaphore_shuffle_time = (double)total_elapsed/NUM_ITERATIONS;
+
+	printf("%.1f\n", avg_semaphore_shuffle_time);
 	return 0;
 }
