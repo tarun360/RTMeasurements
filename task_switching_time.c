@@ -18,7 +18,7 @@ static inline unsigned long long time_ns() {
          (unsigned long long)ts.tv_nsec;
 }
 
-const int NUM_ITERATIONS = 10;
+const int NUM_ITERATIONS = 1000;
 
 long long unsigned t1=0,t2=0,t1_prev=0;
 int flag = -1;
@@ -26,10 +26,10 @@ int flag = -1;
 void* threadfunc_1(void* p)
 {
 	while(1){
-		if(flag==1)
-			break;
 		t1_prev = t1;
-		t1 = time_ns(); 	
+		t1 = time_ns();
+		if(flag==1)
+			break; 	
 	}
 	return NULL;
 }
@@ -62,7 +62,7 @@ long long unsigned task_switching_time(){
  		printf("flag value remained -1\n");
  		exit(1);
  	}
-  	printf("%llu\n", elapsed);
+  	//printf("%llu\n", elapsed);
   	return elapsed;
 }
 
