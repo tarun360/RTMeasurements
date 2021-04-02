@@ -18,9 +18,8 @@ static inline unsigned long long time_ns() {
          (unsigned long long)ts.tv_nsec;
 }
 
-const int NUM_ITERATIONS = 1000;
+const int NUM_ITERATIONS = 10;
 
-sem_t binary_semaphore;
 long long unsigned t1=0,t2=0,t1_prev=0;
 int flag = -1;
 
@@ -42,7 +41,7 @@ void* threadfunc_2(void* p)
 	return NULL;
 }
 
-long long unsigned semaphore_shuffle_time(){
+long long unsigned task_switching_time(){
 
 	pthread_t childt_1, childt_2;
   	pthread_create(&childt_1, NULL, threadfunc_1, NULL);
@@ -55,7 +54,7 @@ long long unsigned semaphore_shuffle_time(){
   	long long unsigned elapsed = 0;
 
  	if(flag==1){
- 		if(t2 > t1)
+ 		if(t2 >= t1)
  			elapsed = t2-t1;
  		else
  			elapsed = t2-t1_prev;
@@ -73,7 +72,7 @@ int main(int argc, char** argv)
 	
 	long long unsigned total_elapsed=0;
 	for(int i=0;i<NUM_ITERATIONS;i++){
-		total_elapsed += semaphore_shuffle_time();
+		total_elapsed += task_switching_time();
 	}
 
 	double avg_task_switching_time = (double)total_elapsed/NUM_ITERATIONS;
